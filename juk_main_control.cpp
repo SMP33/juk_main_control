@@ -24,6 +24,7 @@ using namespace GeoMath;
 
 class  ShareData 
 {
+	
 public:
 	pthread_mutex_t mutex;
 	int a;
@@ -34,8 +35,8 @@ public:
 	juk_msg::juk_set_target_data_msg target_msg;
 	v3geo last_photo_pos;
 	v3geo current_photo_pos;
-	double next_photo_dist = 0.1;
-	bool enable_camera = false;
+	double next_photo_dist = 0.5;
+	bool enable_camera = true;
 	v3 gimbal;
 	unsigned long photo_id = 0;
 	
@@ -65,6 +66,7 @@ void precision_gps_callback(const juk_msg::reach_msg::ConstPtr& in)
 	if (c.enable_camera)
 	{
 		c.current_photo_pos = v3geo (in->lat, in->lng, in->alt);
+		
 		
 	}
 	pthread_mutex_unlock(&c.mutex);
@@ -140,7 +142,7 @@ int main(int argc, char *argv[])
 			c.cam_msg.action = juk_msg::juk_dji_camera_control_msg::take_photo;
 			c.log_file <<  str.str() << c.current_photo_pos.lat << ";" << c.current_photo_pos.lng << ";" << c.current_photo_pos.alt << endl;
 			c.photo_id++;
-			cout << str.str();
+			cout << str.str()<<endl;
 		}
 		
 		c.cam_msg.roll = c.gimbal.x;
